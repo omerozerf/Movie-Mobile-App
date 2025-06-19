@@ -9,5 +9,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="react-native" level="project" />
+    <orderEntry type="library" name="typescript" level="project" />
   </component>
 </module>
