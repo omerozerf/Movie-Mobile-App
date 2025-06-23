@@ -16,7 +16,7 @@ export default function TrendingCard({movie: {movie_id, title, poster_url }, ind
 
         <View className='absolute bottom-9 -left-3.5 px-2 py-1 rounded-full'>
           <MaskedView maskElement={
-            <Text className='font-bold text-white text-6xl'>{index + 1}</Text>
+            <Text className='font-bold text-white text-6xl ml-2'>{index + 1}</Text>
           }>
             <Image className='size-14' resizeMode='cover' source={images.rankingGradient}/>
           </MaskedView>
