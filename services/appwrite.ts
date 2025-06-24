@@ -1,4 +1,4 @@
-import {Client, Databases, ID, Query} from "react-native-appwrite";
+import {Client, Databases, ID, Query, Account} from "react-native-appwrite";
 
 const DATABASE_ID = process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!;
 const COLLECTION_ID = process.env.EXPO_PUBLIC_APPWRITE_COLLECTION_ID!;
@@ -8,6 +8,7 @@ const client = new Client()
   .setProject(process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID!)
 
 const database = new Databases(client)
+const users = new Account(client);
 
 export const updateSearchCount = async (query: string, movie: Movie) => {
   try {
@@ -56,5 +57,21 @@ export const getTrendingMovies = async (): Promise<TrendingMovie[] | undefined> 
   } catch (e) {
     console.log(e)
     return undefined
+  }
+}
+
+export const createUser = async (email: string, password: string, name: string) => {
+  try {
+    const result = await users.create(
+      ID.unique(),
+      email,
+      password,
+      name
+    );
+    console.log("User created:", result);
+    return result;
+  } catch (error) {
+    console.error("User creation failed:", error);
+    throw error;
   }
 }
