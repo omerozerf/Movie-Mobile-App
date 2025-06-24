@@ -46,3 +46,23 @@ export const fetchMovieDetails = async (movieId: string): Promise<MovieDetails> 
     throw e;
   }
 }
+
+// @ts-ignore
+export const fetchMovieVideos = async (movieId: string): Promise<any[]> => {
+  try {
+    const response = await fetch(`${TMBD_CONFIG.BASE_URL}/movie/${movieId}/videos`, {
+      method: 'GET',
+      headers: TMBD_CONFIG.headers,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch videos! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.results; // Videolar bu array içinde
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};

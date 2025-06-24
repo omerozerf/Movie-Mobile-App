@@ -11,7 +11,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { icons } from "@/constants/icons";
 import useFetch from "@/services/useFetch";
-import { fetchMovieDetails } from "@/services/api";
+import {fetchMovieDetails, fetchMovieVideos} from "@/services/api";
+import {useEffect, useState} from "react";
+import YoutubePlayer from "react-native-youtube-iframe";
 
 interface MovieInfoProps {
   label: string;
@@ -30,6 +32,19 @@ const MovieInfo = ({ label, value }: MovieInfoProps) => (
 const Details = () => {
   const router = useRouter();
   const { id } = useLocalSearchParams();
+  const [showVideo, setShowVideo] = useState(false);
+  const [videoKey, setVideoKey] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadVideo = async () => {
+      const videos = await fetchMovieVideos(id as string);
+      const trailer = videos.find(
+        (v: any) => v.type === "Trailer" && v.site === "YouTube"
+      );
+      if (trailer) setVideoKey(trailer.key);
+    };
+    loadVideo();
+  }, []);
 
   const { data: movie, loading } = useFetch(() =>
     fetchMovieDetails(id as string)
@@ -44,6 +59,25 @@ const Details = () => {
 
   return (
     <View className="bg-primary flex-1">
+
+      {showVideo && videoKey && (
+        <View className="absolute inset-0 z-50 bg-black/90 justify-center items-center">
+          <View className="w-full aspect-video max-w-[90%]">
+            <YoutubePlayer
+              height={220}
+              play={true}
+              videoId={videoKey}
+            />
+          </View>
+          <TouchableOpacity
+            className="absolute top-10 right-5 z-50 bg-white p-2 rounded-full"
+            onPress={() => setShowVideo(false)}
+          >
+            <Text className="text-black font-bold text-xl">✕</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
         <View>
           <Image
@@ -54,7 +88,10 @@ const Details = () => {
             resizeMode="stretch"
           />
 
-          <TouchableOpacity className="absolute bottom-5 right-5 rounded-full size-14 bg-white flex items-center justify-center">
+          <TouchableOpacity
+            className="absolute bottom-5 right-5 rounded-full size-14 bg-white flex items-center justify-center"
+            onPress={() => setShowVideo(true)}
+          >
             <Image
               source={icons.play}
               className="w-6 h-7 ml-1"
