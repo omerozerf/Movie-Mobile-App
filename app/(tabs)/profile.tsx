@@ -17,6 +17,8 @@ const Profile = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState(false);
 
   const handleLogin = async () => {
     try {
@@ -28,8 +30,11 @@ const Profile = () => {
       await account.createEmailPasswordSession(email, password);
       const user = await account.get();
       setUserName(user.name);
+      setMessage("Login successful!");
+      setError(false);
     } catch (error) {
-      console.log("Login failed:", error);
+      setMessage("Login failed. Please check your credentials.");
+      setError(true);
     }
   };
 
@@ -43,8 +48,11 @@ const Profile = () => {
       await account.createEmailPasswordSession(email, password);
       const user = await account.get();
       setUserName(user.name);
+      setMessage("Account created and logged in!");
+      setError(false);
     } catch (error) {
-      console.log("Create failed:", error);
+      setMessage("Account creation failed. Email may already be in use.");
+      setError(true);
     }
   };
 
@@ -64,6 +72,9 @@ const Profile = () => {
       <View className="flex justify-center items-center flex-1 gap-5">
         <Image source={icons.person} className="size-10" tintColor="#fff" />
         <Text className="text-white text-lg">{mode === "login" ? "Login" : "Create Account"}</Text>
+        {!!message && (
+          <Text className={`text-sm ${error ? "text-red-400" : "text-green-400"}`}>{message}</Text>
+        )}
 
         <TextInput
           className="w-full bg-white px-4 py-2 rounded"
