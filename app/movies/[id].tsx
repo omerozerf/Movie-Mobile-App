@@ -139,7 +139,7 @@ const Details = () => {
               source={icons.save}
               className="w-6 h-6"
               resizeMode="contain"
-              tintColor={isSaved ? "#facc15" : "#000"} // yellow if saved, black if not
+              tintColor={isSaved ? "#facc15" : "#000"}
             />
           </TouchableOpacity>
         </View>
