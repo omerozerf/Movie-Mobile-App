@@ -13,6 +13,7 @@ import { icons } from "@/constants/icons";
 import useFetch from "@/services/useFetch";
 import {fetchMovieDetails, fetchMovieVideos} from "@/services/api";
 import {useEffect, useState} from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import YoutubePlayer from "react-native-youtube-iframe";
 
 interface MovieInfoProps {
@@ -34,6 +35,7 @@ const Details = () => {
   const { id } = useLocalSearchParams();
   const [showVideo, setShowVideo] = useState(false);
   const [videoKey, setVideoKey] = useState<string | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     const loadVideo = async () => {
@@ -49,6 +51,18 @@ const Details = () => {
   const { data: movie, loading } = useFetch(() =>
     fetchMovieDetails(id as string)
   );
+
+  useEffect(() => {
+    const checkIfSaved = async () => {
+      const saved = await AsyncStorage.getItem('savedMovies');
+      const savedMovies = saved ? JSON.parse(saved) : [];
+      const exists = savedMovies.some((m: any) => m.id === movie?.id);
+      setIsSaved(exists);
+    };
+    if (movie?.id) {
+      checkIfSaved();
+    }
+  }, [movie]);
 
   if (loading)
     return (
@@ -96,6 +110,36 @@ const Details = () => {
               source={icons.play}
               className="w-6 h-7 ml-1"
               resizeMode="stretch"
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            className="absolute bottom-5 left-5 rounded-full size-14 bg-white flex items-center justify-center"
+            onPress={async () => {
+              try {
+                const saved = await AsyncStorage.getItem('savedMovies');
+                let savedMovies = saved ? JSON.parse(saved) : [];
+                // @ts-ignore
+                const exists = savedMovies.some((m: any) => m.id === movie.id);
+                if (exists) {
+                  // @ts-ignore
+                  savedMovies = savedMovies.filter((m: any) => m.id !== movie.id);
+                  setIsSaved(false);
+                } else {
+                  savedMovies.push(movie);
+                  setIsSaved(true);
+                }
+                await AsyncStorage.setItem('savedMovies', JSON.stringify(savedMovies));
+              } catch (err) {
+                console.error('Error toggling saved state:', err);
+              }
+            }}
+          >
+            <Image
+              source={icons.save}
+              className="w-6 h-6"
+              resizeMode="contain"
+              tintColor={isSaved ? "#facc15" : "#000"} // yellow if saved, black if not
             />
           </TouchableOpacity>
         </View>
