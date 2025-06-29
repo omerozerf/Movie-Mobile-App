@@ -6,28 +6,35 @@ A sleek and modern mobile app for discovering and searching movies with real-tim
 
 - 🎞️ **Movie Discovery:** Browse the latest movies using the TMDB API.
 - 🔍 **Search Functionality:** Search movies by name with responsive query handling.
-- 📊 **Trending Algorithm:** Tracks and ranks search terms based on frequency.
-- 🧠 **Appwrite Integration:** Persists search metrics using Appwrite's database services.
-- ⚛️ **Built with React Native:** Native performance and cross-platform compatibility.
-- 🌙 **Styled with Tailwind (nativewind):** Fast, modern, utility-first UI styling.
+- 💾 **Save Movies:** Save your favorite movies locally using AsyncStorage.
+- 🧠 **Trending Algorithm:** Tracks and ranks search terms based on frequency using Appwrite.
+- 👤 **Authentication:** Create or login to your profile.
+- 📺 **Watch Trailers:** Watch movie trailers via embedded YouTube players.
+- 🧱 **Built with React Native (bare workflow)**
+- 🌙 **Styled with Tailwind (nativewind)** for a modern UI.
 
 ## 🛠️ Technologies
 
-- React Native (bare, not Expo managed)
+- React Native
 - TypeScript
 - Appwrite (Database + Document API)
 - TMDB API
-- nativewind (Tailwind CSS for React Native)
+- NativeWind (Tailwind CSS)
+- AsyncStorage
 - Expo Router
+- React Native YouTube Iframe
 
 ## 📂 Project Structure
 
 ```
 /app
   /(tabs)
-    _layout.tsx
-    index.tsx       # Home screen
-    search.tsx      # Search screen
+    _layout.tsx       # Bottom tab layout
+    index.tsx         # Home screen
+    search.tsx        # Search screen
+    saved.tsx         # Saved movies screen
+    profile.tsx       # Login / Create account
+    movies/[id].tsx   # Movie detail + trailer
 /assets
 /components
 /constants
@@ -47,11 +54,13 @@ A sleek and modern mobile app for discovering and searching movies with real-tim
    npm install
    ```
 
-3. **Setup environment variables:** Create a `.env` file in the root directory with the following:
+3. **Setup environment variables:**
+   Create a `.env` file in the root directory with the following:
    ```
    EXPO_PUBLIC_APPWRITE_PROJECT_ID=your_project_id
    EXPO_PUBLIC_APPWRITE_DATABASE_ID=your_database_id
    EXPO_PUBLIC_APPWRITE_COLLECTION_ID=your_collection_id
+   EXPO_PUBLIC_MOVIE_API_KEY=your_tmdb_key
    ```
 
 4. **Run the project:**
@@ -61,7 +70,13 @@ A sleek and modern mobile app for discovering and searching movies with real-tim
 
 ## 📸 Screenshots
 
-> (Will be uploaded soon...)
+| Home | Search | Saved |
+|------|--------|-------|
+| ![Home](./ScreenShots/home.png) | ![Search](./ScreenShots/search.png) | ![Saved](./ScreenShots/saved.png) |
+
+| Movie Card | Movie Trailer | Profile |
+|-----------|---------------|---------|
+| ![Card](./ScreenShots/movie-card.png) | ![Trailer](./ScreenShots/movie-trailer.png) | ![Profile](./ScreenShots/profile.png) |
 
 ## 🤝 Contributing
 
